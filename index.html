@@ -371,8 +371,18 @@
             <li><b>LLaVA</b>: <span style="font-size: 95%;">Large Language and Vision Assistant, the first open-source alternative to GPT-4V. It is an end-to-end trained large multimodal model that combines <a href="https://openai.com/research/clip">CLIP vision encoder</a> and <a href="https://github.com/lm-sys/FastChat">Vicuna</a> for general-purpose visual understanding and reasoning, achieving impressive chat capabilities mimicking spirits of the GPT-4V.</span></li>
             <li><b>SEEM</b>: <span style="font-size: 95%;">Segment Everything Everywhere with Multi-modal prompts all at once. SEEM allows users to easily segment an image using prompts of different types including visual prompts (points, marks, boxes, scribbles) and language prompts. It can also work with any combination of prompts or generalize to custom prompts.</span></li>
             <li><b>GLIGEN</b>: Grounded-Language-to-Image Generation, an open-source model that extends the functionality of existing pre-trained text-to-image diffusion models by enabling them to also be conditioned on visual prompts such as bounding boxes.</span></li>
-          </ul>  
+          </ul>
         </p>
+
+        <p>
+        <h3 class="title is-4">Development Challenges</h3>
+        LLaVA-Interactive is a system-level demo synergy that leverages existing model checkpoints to build general-purpose assistants/agents, without any additional model training. Though the requirements on training AI models are low, it poses several technical challenges that we have addressed when developing LLaVA-Interactive along the way: 
+        (1) One challenge we faced was that the GLIGEN inpainting model was not designed to handle filling the background hole. Instead, we used <a href="https://github.com/Sanster/lama-cleaner">LAMA</a> for background filling.
+        (2) Another challenge was that <a href="https://www.gradio.app/">Gradio</a> did not have enough support for user interaction, such as drag-and-drop. We solved this by implementing a new Gradio Image component tool that enabled this functionality. 
+        (3) The complexity of integrating several projects and models together, each of them being complex already. We overcame this by experimenting with different approaches and creating a very clean UI layout and an efficient data sharing scheme. 
+        (4) The last challenge was managing different package requirements and dependencies. We dealt with this by running different models, such as LAMA, as separate web services.
+        </p>
+
       </div>
       </div>
     </div>
