@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="LLaVA Interactive">
+  <meta name="keywords" content="multimodal chatbot">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LLaVA</title>
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/954/954591.png">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js"></script>
+  <script type="module" src="https://gradio.s3-us-west-2.amazonaws.com/3.27.0/gradio.js"></script>
+</head>
+
+<style>
+  .expandable-card .card-text-container {
+    max-height: 200px;
+    overflow-y: hidden;
+    position: relative;
+  }
+
+  .expandable-card.expanded .card-text-container {
+    max-height: none;
+  }
+
+  .expand-btn {
+    position: relative;
+    display: none;
+    background-color: rgba(255, 255, 255, 0.8);
+    /* margin-top: -20px; */
+    /* justify-content: center; */
+    color: #510c75;
+    border-color: transparent;
+  }
+
+  .expand-btn:hover {
+    background-color: rgba(200, 200, 200, 0.8);
+    text-decoration: none;
+    border-color: transparent;
+    color: #510c75;
+  }
+
+  .expand-btn:focus {
+    outline: none;
+    text-decoration: none;
+  }
+
+  .expandable-card:not(.expanded) .card-text-container:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 90px;
+    background: linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 1));
+  }
+
+  .expandable-card:not(.expanded) .expand-btn {
+    margin-top: -40px;
+  }
+
+  .card-body {
+    padding-bottom: 5px;
+  }
+
+  .vertical-flex-layout {
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .figure-img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .adjustable-font-size {
+    font-size: calc(0.5rem + 2vw);
+  }
+
+  .chat-history {
+    flex-grow: 1;
+    overflow-y: auto;
+    /* overflow-x: hidden; */
+    padding: 5px;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 10px;
+  }
+
+  #gradio pre {
+    background-color: transparent;
+  }
+</style>
+
+<body>
+
+
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">LLaVA-Interactive</h1>
+            <h3 class="title is-3 publication-title">Image Chat, Segmentation and Generation/Editing -- All-in-one demo</h3>
+            <div class="is-size-5">
+              <span class="author-block">
+                <a href="https://www.microsoft.com/en-us/research/people/wchen/" style="color:#008AD7;font-weight:normal;">Wei-Ge Chen</a>,
+              </span>
+              <span class="author-block">
+                <a href="https://www.microsoft.com/en-us/research/people/irinasp/" style="color:#008AD7;font-weight:normal;">Irina Spiridonova</a>,
+              </span>
+              <span class="author-block">
+                <a href="https://jwyang.github.io/" style="color:#008AD7;font-weight:normal;">Jianwei Yang</a>,
+              </span>
+              <span class="author-block">
+                <a href="https://chunyuan.li/" style="color:#008AD7;font-weight:normal;">Chunyuan Li</a>
+              </span>
+            </div>
+
+            <br>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block"><b style="color:#008AD7; font-weight:normal">&#x25B6 </b> Microsoft Research, Redmond</span>
+            </div>
+
+
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <span class="link-block">
+                  <a href="https://arxiv.org/abs/2304.08485" target="_blank"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                    </span>
+                    <span>arXiv</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="https://github.com/haotian-liu/LLaVA" target="_blank"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fab fa-github"></i>
+                    </span>
+                    <span>Code</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="https://llava.hliu.cc" target="_blank"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="far fa-images"></i>
+                    </span>
+                    <span>Demo</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="https://huggingface.co/datasets/liuhaotian/LLaVA-Instruct-150K" target="_blank"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fas fa-database"></i>
+                    </span>
+                    <span>Dataset</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="https://github.com/haotian-liu/LLaVA/blob/main/docs/MODEL_ZOO.md" target="_blank"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fas fa-share-square"></i>
+                    </span>
+                    <span>Model</span>
+                  </a>
+                </span>
+
+
+                
+
+                <!-- <span class="link-block">
+                <a href="#"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                    <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Video</span>
+                  </a>
+              </span> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hero teaser">
+    <div class="container is-max-desktop">
+        <div class="columns is-centered has-text-centered">
+          <div class="column is-six-fifths">
+            <img id="llava_interative_logo" width="30%" src="./images/llava_interactive_logo.png">
+          </div>
+        </div>
+      <div class="hero-body">
+        <h4 class="subtitle has-text-centered">
+          LLaVA-Interactive is a large language-and-vision assistant demo, dedicated to demonstrate the possibilities of multimodal human-machine interaction: visual input, visual output and visual interaction. It combines complementary skills from three models: visual chat of <a href="https://llava-vl.github.io/">LLaVA</a>, visual prompt for segmentation from <a href="https://github.com/UX-Decoder/Segment-Everything-Everywhere-All-At-Once">SEEM</a>, and visual prompt for image generation/editing from <a href="https://gligen.github.io/">GLIGEN</a>.
+          It achieves impressive multimodall interaction capabilities, going beyond the langauge-only interaction of LLaVA/GPT-4V. 
+        </h4>
+
+        <h4 class="subtitle has-text-centered">
+          LLaVA-Interactive is a system-level synergy of the inference stages of three models, without additional model training. It is surprisingly cheap to build. Checkout our code release on GitHub.
+
+        </h4>
+      </div>
+    </div>
+  </section>
+
+  <section class="section"  style="background-color:#efeff081">
+    <div class="container is-max-desktop" id="gradio">
+      <gradio-app src="https://llava.hliu.cc"></gradio-app>
+    </div>
+  </section>
+
+  <section class="section"  style="background-color:#efeff081">
+    <div class="container is-max-desktop">
+      <!-- Abstract. -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-six-fifths">
+          <h2 class="title is-3">Overview</h2>
+          <div class="content has-text-justified">
+            <p>
+              The rapid advancement of large language models (LLMs) has revolutionized chatbot systems, resulting in unprecedented levels of intelligence as seen in OpenAI's ChatGPT. This success of ChatGPT on language tasks has inspired the community to anticipate a similar success paradigm in the multimodal space, where both language and vision (LV) modalities are involved in the human-machine interaction to unlock many new scenarios, leading to the increasingly popular research topic of building general-purpose assisants. GPT-4V is such an example, taking one step forward to showcase the interesting capabitlies of chatbots with langauge-image input and langauge output.
+              However, despite its impressive performance, GPT-4V is limited in: (1) it is largely a language interaction system, where input images only play the role of providing additional context for chat; (2) the training and architecture details remain unclear, hindering research and open-source innovation in this field. 
+            </p>
+
+            <p>
+              To demonstrate the new application scenarios of general-purpose assistants in the multimodal space, we introduce LLaVA-Interactive, an open-source demo system, backed by three powerful LV models and an easy-to-use, extensible framework. LLaVA-Interactive is favorable:
+
+              <ol type="1">
+                <li><b>Visual Interaction</b>. It supports visual prompt by allowing users to draw strokes and bouding boxes to better express human intents in visual creation process (including image segmentation and generation/editing), in addition to visual chat. Therefore, LLaVA-Interactive has demonstrated more engaged human-machine interaction experiences compared to GPT-4V/LLaVA, in terms of following human intents.
+                </li>
+                <li><b>Open-source</b>. We make our demo system and code base publicly available, to facilitate future improvement in the community</li>
+              </ol>  
+
+              This blog post provides a preliminary evaluation of LLaVA-Interactive's new capabilities and describes its work flow and serving infrastructure. We also invite the community to interact with our online demo to test the capabilities of this multimodal chatbot.
+            </p>
+ 
+           </p>
+  
+          </div>
+        </div>
+      </div>
+        
+    </div>
+  </section>
+
+
+  
+<section class="section">
+  <!-- Results. -->
+  <div class="columns is-centered has-text-centered">
+    <div class="column is-six-fifths">
+      <h2 class="title is-3"><img id="painting_icon" width="3%" src="https://cdn-icons-png.flaticon.com/512/5886/5886212.png"> LLaVA-Interactive</h2>
+    </div>
+  </div>
+  <!-- </div> -->
+  <!--/ Results. -->    
+<div class="container is-max-desktop">
+
+  <div class="columns is-centered">
+    <div class="column is-full-width">
+      <div class="content has-text-justified">
+
+        <centering>
+          <div style="text-align: center;">
+            <img id="teaser" width="30%" src="images/llava_interactive_workflow.png">     
+          </div>
+        </centering>  
+        <p>
+        This figure provides a workflow of LLaVA-Interactive. We describe the one typical visual creation process as below:
+
+        <ol type="1">
+            <li><b>Image Input</b>. <span style="font-size: 95%;"> To begin, an image is needed. The user can either upload an image, or generate an image by specifying its language caption and drawing bounding boxes for the intended spatial layout of the objects. Once the image is ready, one may play with image by applying one of following three steps: chat, segmentation or editing.</span></li>
+            <li><b>Visual Chat</b>: <span style="font-size: 95%;"> Ask any questions about the image, eg, the suggestions on how to revise the image. Based on the editing suggestions, one may remove or add new objects using Step 3 or 4 respectively.</span></li>
+            <li><b>Interactive Segmentation</b>: <span style="font-size: 95%;"> One may segment an object mask using either stroke drawing or text prompt. To remove it, please drag the mask out of the image, and a background will be aumatically filled. To fill in a new object, please provide the text prompt for the mask</span></li>
+            <li><b>Grounded Editing</b>: <span style="font-size: 95%;"> One may put new objects directly on the image, by drawing the bounding boxes and associating the corresponding concepts for the intended objects.</span></li>  
+            <li><b>Mult-turn Interaction</b>: <span style="font-size: 95%;"> Repeating Step 2, 3 or 4 to iteratively refine the visual creation.</span></li>       
+        </ol>  
+        </p>
+
+        <p>
+          <h3 class="title is-4">Capability Comparisons</h3>
+          Based on LLaVA that allows image input for visual chat only, LLaVA-Interactive extend it to support visual interaction such as user-drawn strokes and bounding box, as well as visual image generation/editing. Please see the comparisons of the capabilities below:
+
+<!-- CSS Code: Place this code in the document's head (between the 'head' tags) -->
+<style>
+  table.GeneratedTable {
+    width: 100%;
+    background-color: #ffffff;
+    border-collapse: collapse;
+    border-width: 2px;
+    border-color: #c1c4c5;
+    border-style: solid;
+    color: #000000;
+  }
+  
+  table.GeneratedTable td, table.GeneratedTable th {
+    border-width: 2px;
+    border-color: #9b9d9e;
+    border-style: solid;
+    padding: 3px;
+  }
+  
+  table.GeneratedTable thead {
+    background-color: #6691ee;
+  }
+  </style>
+  
+  <!-- HTML Code: Place this code in the document's body (between the 'body' tags) where the table should appear -->
+  <div class="column is-six-fifths" width="60%">
+  <table class="GeneratedTable">
+    <thead>
+      <tr>
+        <th>System</th>
+        <th>Visual Input</th>
+        <th>Visual Output</th>
+        <th>Visual Interaction</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <a href="https://llava-vl.github.io/">LLaVA</a> / 
+          <a href="https://openai.com/research/gpt-4v-system-card">GPT-4V</a> 
+        </td>
+        <td>&#10004;</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a href="">LLaVA-Interactive</a></td>
+        <td>&#10004;</td>
+        <td>&#10004;</td>
+        <td>&#10004;</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+  <!-- Codes by Quackit.com -->
+  
+        </p>
+
+      <div class="content has-text-justified"> 
+
+
+        <p>
+          <h3 class="title is-4">Behind the Scenes: Individual Models</h3>
+          LLaVa-Interactive is an all-in-one demo that connects three LV models in one interactive session for image chat, segmentation and generation/editing, which can complete more complex tasks than a single model alone. As a background, we briefly describe the individual models for who are interested in the key techniques:  
+          <ul type="1">
+            <li><b>LLaVA</b>: <span style="font-size: 95%;">Large Language and Vision Assistant, the first open-source alternative to GPT-4V. It is an end-to-end trained large multimodal model that combines <a href="https://openai.com/research/clip">CLIP vision encoder</a> and <a href="https://github.com/lm-sys/FastChat">Vicuna</a> for general-purpose visual understanding and reasoning, achieving impressive chat capabilities mimicking spirits of the GPT-4V.</span></li>
+            <li><b>SEEM</b>: <span style="font-size: 95%;">Segment Everything Everywhere with Multi-modal prompts all at once. SEEM allows users to easily segment an image using prompts of different types including visual prompts (points, marks, boxes, scribbles) and language prompts. It can also work with any combination of prompts or generalize to custom prompts.</span></li>
+            <li><b>GLIGEN</b>: Grounded-Language-to-Image Generation, an open-source model that extends the functionality of existing pre-trained text-to-image diffusion models by enabling them to also be conditioned on visual prompts such as bounding boxes.</span></li>
+          </ul>  
+        </p>
+      </div>
+      </div>
+    </div>
+  </div>
+
+
+</section>
+ 
+
+
+
+<section class="section">
+  <!-- Results. -->
+  <div class="columns is-centered has-text-centered">
+    <div class="column is-six-fifths">
+      <h2 class="title is-3"><img id="painting_icon" width="3%" src="https://cdn-icons-png.flaticon.com/512/3515/3515174.png"> Performance</h2>
+    </div>
+  </div>
+
+
+
+  <!-- </div> -->
+  <!--/ Results. -->    
+<div class="container is-max-desktop">
+
+
+  <!-- Grounedtext2img. -->
+  <div class="columns is-centered">
+    <div class="column is-full-width">
+      <h2 class="title is-4"><img id="painting_icon" width="4%" src="https://cdn-icons-png.flaticon.com/512/1698/1698535.png"> <span style="font-size: 100%;">Visual Chat:</span> Towards building multimodal GPT-4 level chatbot  </h2>
+      
+      <div>
+        <a href="https://plotly.com/~lichunyuan24/5/?share_key=d78QObaCAYCIy8PJpe3gd1" target="_blank" title="llava_gpt4_pie" style="display: block; text-align: center;">  <img id="painting_icon" width="90%" src="images/pie_llava_gpt4.png"> </a>
+
+    </div>
+
+    <p style="font-family:Times New Roman"><b>An evaluation dataset with 30 unseen images is constructed: each image is assocaited with three types of instructions: conversation, detailed description and complex reasoning. This leads to 90 new language-image instructions, on which we test LLaVA and GPT-4, and use GPT-4 to rate their responses from score 1 to 10. The summed score and relative score per type is reported. Overall, LLaVA achieves 85.1% relative score compared with GPT-4, indicating the effectinvess of the proposed self-instruct method in multimodal settings</b>               
+    </div>
+  </div>
+
+  <!-- Grounedtext2img. -->
+  <div class="columns is-centered">
+    <div class="column is-full-width">
+      <h2 class="title is-4"> <img id="painting_icon" width="3%" src="https://scienceqa.github.io/img/logo.png"><span style="font-size: 100%;"> Science QA:</span> New SoTA with the synergy of LLaVA with GPT-4</h2>
+      
+      <div>
+        <a href="https://plotly.com/~lichunyuan24/1/?share_key=v4opE3TJpxqQ08RYsDD4iv" target="_blank" title="Plot 1" style="display: block; text-align: center;"><img id="painting_icon" width="65%" src="images/bar_llava_gpt4_scienceqa.png"></a>
+        <script data-plotly="lichunyuan24:1" sharekey-plotly="v4opE3TJpxqQ08RYsDD4iv" src="https://plotly.com/embed.js" async></script>
+    </div>
+        <p style="font-family:Times New Roman"><b>LLaVA alones achieve 90.92%. We use the text-only GPT-4 as the juedge, to predict the final answer based on its own previous answers and the LLaVA answers. This ``GPT-4 as juedge'' scheme yields a new SOTA 92.53%.</b>
+              
+    </div>
+  </div>
+</section>
+
+
+
+
+<section class="section">
+
+  <div class="columns is-centered has-text-centered">
+    <div class="column is-six-fifths">
+      <h2 class="title is-3"> Examples on Visual Instruction Following</h2>
+    </div>
+  </div>
+
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-six-fifths">
+         <h2 class="title is-4">Visual Reasoning on two examples from <a href="https://arxiv.org/abs/2303.08774">OpenAI GPT-4 Technical Report</a></h2>
+      </div>
+      </div>  
+
+    <div class="columns is-centered has-text-centered">
+    <div class="column is-six-fifths">
+      <img id="teaser" width="35%" src="images/cmp_ironing.png">
+      <img id="teaser" width="38%" src="images/cmp_chicken_nugget.png">
+    </div>
+    </div>  
+
+  
+
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-six-fifths">
+         <h2 class="title is-4">Optical character recognition (OCR)</a></h2>
+      </div>
+      </div>  
+
+    <div class="columns is-centered has-text-centered">
+    <div class="column is-six-fifths" style="display: flex; align-items: flex-start; justify-content: center;">
+        <img id="teaser" width="32%" src="images/ocr/llava_example_cvpr2023.png">
+        <img id="teaser" width="32%" src="images/ocr/llava_example_cvinw_logo.png">
+        <img id="teaser" width="32%" src="images/ocr/example_llava_exmaple.png">
+    </div>
+    </div>  
+
+  
+
+  
+
+
+  <div class="container mt-5">
+    <!-- <h2 class="text-center mb-5">Who's GPT-4's favorite? Battles between State-of-the-Art Chatbots</h2> -->
+    <!-- Selection -->
+    <div class="form-row" style="justify-content: flex-end;">
+      <div class="form-group col-md-1">
+        <div class="col-md-2" style="width: 100%"><label>&nbsp;</label></div>
+        <div class="btn-group" role="group" aria-label="Left and Right Controller"
+          style="width: 100%;align-items: flex-end;justify-content: center;flex-direction: row;display: flex;">
+          <button type="button" class="form-control btn btn-primary" id="prev-question"><i
+              class="material-icons">keyboard_arrow_left</i></button>
+          <button type="button" class="form-control btn btn-primary" id="next-question"><i
+              class="material-icons">keyboard_arrow_right</i></button>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Question Card -->
+    <div style="display: flex; justify-content: center; align-items: center;">
+      <div class="card mb-4" style="width: 100%; display: flex; align-items: center;">
+        <!-- <p><b>Description:</b> Monalisa is a famous painting by Leonardo da Vinci. </p> -->
+
+        <div class="card-body" id="selected-question" style="display: flex; height: 80vh;">
+          <div class="chat-history">
+            <!-- Add your chat messages here -->
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+  <section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title">BibTeX</h2>
+      <pre><code>
+  @article{liu2023llava,
+    author      = {Chen, Wei-Ge and Spiridonova, Irina and Yang, Jianwei and Li, Chunyuan},
+    title       = {LLaVA-Interactive: Image Chat, Segmentation and Generation/Editing -- An All-in-One Demo},
+    publisher   = {https://llava-vl.github.io/llava-interactive},
+    year        = {2023}
+  }
+  </code></pre>
+    </div>
+  </section>
+
+  Chen, Wei-Ge and Spiridonova, Irina and Yang, Jianwei and Li, Chunyuan
+  
+  <section class="section" id="Acknowledgement">
+    <div class="container is-max-desktop content">
+      <h2 class="title">Acknowledgement</h2>
+      <p>
+        This website is adapted from <a
+        href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>, licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+        Commons Attribution-ShareAlike 4.0 International License</a>.  We thank the LLaMA team for giving us access to their models, and open-source projects, including Alpaca and Vicuna.
+      </p>
+
+      <p>
+<b>Usage and License Notices</b>: The data, code and checkpoint is intended and licensed for research use only. They are also restricted to uses that follow the license agreement of SEEM, GLIGEN, CLIP, LLaMA, Vicuna and GPT-4. The dataset is CC BY NC 4.0 (allowing only non-commercial use) and models trained using the dataset should not be used outside of research purposes.
+</p>
+
+      <p>
+      <a href='https://github.com/Computer-Vision-in-the-Wild/'><img id="painting_icon" width="10%" src="https://avatars.githubusercontent.com/u/97258247?s=200&v=4"></a> 
+      Related Links: 
+      <a href='https://llava-vl.github.io/'>[LLaVA]</a>  
+      <a href='https://github.com/UX-Decoder/Segment-Everything-Everywhere-All-At-Once'>[SEEM]</a> 
+      <a href='https://gligen.github.io/'>[GLIGEN]</a> 
+      <a href='https://github.com/Computer-Vision-in-the-Wild/'>[Computer Vision in the Wild (CVinW)]</a>     
+      </p>    
+    </div>
+  </section>
+
+  <script>
+    // Handle message showing
+    function createChatRow(sender, text, imageSrc) {
+      var article = document.createElement("article");
+      article.className = "media"
+
+      var figure = document.createElement("figure");
+      figure.className = "media-left";
+
+      var span = document.createElement("span");
+      span.className = "icon is-large";
+
+      var icon = document.createElement("i");
+      icon.className = "fas fas fa-2x" + (sender === "User" ? " fa-user " : sender === "LLaVA" ? " fa-robot" : "");
+
+      var media = document.createElement("div");
+      media.className = "media-content";
+
+      var content = document.createElement("div");
+      content.className = "content";
+
+      var para = document.createElement("p");
+
+      // wrap text in pre tag to preserve whitespace and line breaks
+      var pre_text = document.createElement("pre");
+      pre_text.style = "background-color: white; font-size: 18px; font-family: Arial; padding: 0; margin: 0; white-space: pre-wrap; word-wrap: break-word;";
+      var paraText = document.createTextNode(text);
+      pre_text.appendChild(paraText);
+
+      var strong = document.createElement("strong");
+      strong.innerHTML = sender;
+      var br = document.createElement("br");
+
+      para.appendChild(strong);
+      para.appendChild(br);
+      para.appendChild(pre_text);
+
+      // Add image if imageSrc is provided
+      if (imageSrc) {
+        var img = document.createElement("img");
+        img.src = imageSrc;
+        img.style = "max-width: 100%; max-height: 300px;"; // Adjust the style as needed
+        para.appendChild(img);
+      }
+
+      content.appendChild(para);
+      media.appendChild(content);
+      span.appendChild(icon);
+      figure.appendChild(span);
+      if (sender !== "Description") {
+        article.appendChild(figure);
+      };
+      article.appendChild(media);
+      return article;
+    }
+
+    function addMessageToChatHistory(sender, message, imageSrc) {
+      const chatHistory = document.querySelector('.chat-history');
+      const chatRow = createChatRow(sender, message, imageSrc);
+      chatHistory.appendChild(chatRow);
+      chatHistory.scrollTop = chatHistory.scrollHeight;
+    }
+
+    function clearChatHistory() {
+      const chatHistory = document.querySelector('.chat-history');
+      chatHistory.innerHTML = "";
+    }
+
+    // 
+    const conversations = [
+      {
+        "description": "monalisa",
+        "turns": [
+          // ["Description", "Please read the description and answer the question."],
+          ["User", "", "/static/images/monalisa.jpg"],
+          ["User", "Do you know who drew this painting?​"],
+          ["LLaVA",
+            "The painting depicts a woman, commonly believed to be Mona Lisa, the famous artwork by Leonardo da Vinci. " +
+            "It is a portrait painting that showcases the woman's enigmatic smile and has become one of the most famous and iconic art pieces in the world. " +
+            "The original work is displayed in the Louvre Museum in Paris, and it is known for its intricate details, use of oil paint, and the artist's innovative techniques that contributed to its enduring appeal and mystery.​​"
+          ]
+        ]
+      },
+      {
+        "description": "monalisa with dog head",
+        "turns": [
+          ["User", "", "/static/images/monalisa-fun.jpg"],
+          ["User", "Do you know who drew this painting?​"],
+          ["LLaVA", "The painting depicts a dog in a humorous situation, where it appears to be wearing a woman's dress and standing in front of a landscape. Although the artist of the painting is not explicitly identified, it could be a reference to the famous artist Da Vinci, known for his artistic works, including the Mona Lisa. The painting is likely a creative and comical take on the traditional portrait style, replacing a human figure with a dog dressed in a woman's clothing, making it an interesting and amusing visual piece.​"]
+        ]
+      },
+      {
+        "description": "Titanic Rose and Jack",
+        "turns": [
+          ["User", "", "/static/images/titanic.jpg"],
+          ["User", "What's the ending of this movie?​​"],
+          ["LLaVA", "​In the image, a young woman is leaning on a man in front of a beautiful sunset, with both of them standing on a boat. They appear to be enjoying a romantic moment together. The scene suggests that they could be depicted as the characters Jack and Rose from the popular movie Titanic. In the movie, their romance blossoms aboard the fictional ocean liner Titanic, with the pair ultimately sharing a passionate kiss as the ship sinks into the ocean. The ending of the movie is known for its emotional and heartfelt scenes, where the characters are forced to say goodbye to each other as they are separated by the sinking ship. The image evokes a sense of romance and nostalgia, paying tribute to the iconic love story portrayed in the movie Titanic.​"]
+        ]
+      },
+      {
+        "description": "Fridge",
+        "turns": [
+          ["User", "", "/static/images/fridge.jpg"],
+          ["User", "What are the meals that I can cook with these?​​"],
+          ["LLaVA", "With the variety of food items stored in the refrigerator, you can prepare several meals. For example, you can create a fruit salad using the strawberries, blueberries, and carrots. Additionally, you can make a delicious smoothie using the fruits and vegetables, which would be a healthy and nutritious snack or breakfast option. The milk and eggs can be used to create various dishes, such as a milk-based smoothie, a baked casserole, or scrambled eggs. The juice can also be used to make a fresh fruit and juice mix or as a refreshing homemade popsicle. The possibilities are vast, and the meals you can create will depend on your preferences and dietary needs.​​"],
+          ["User", "I would like to do the fruit salad.  Show me the recipe.​"],
+          ["LLaVA",
+            `Certainly! Here's a simple fruit salad recipe using the items in your refrigerator:​
+
+Ingredients:​
+- 2 cups fresh strawberries, sliced​
+- 1 cup fresh blueberries​
+- 1 large carrot, grated​
+- Juice of half a lemon​
+- A handful of chopped fresh parsley or mint​
+- A few ice cubes​
+- Optional: honey or maple syrup (adjust to taste)​
+
+Instructions:​
+1. In a large bowl, combine the sliced strawberries, blueberries, and carrot. Gently toss them together to mix.​
+2. Drizzle the juice of half a lemon over the fruit and vegetables to prevent them from oxidizing and add a refreshing citrus flavor.​
+3. Sprinkle the chopped fresh parsley or mint over the fruit and gently toss once more.​
+4. If desired, add a drizzle of honey or maple syrup for a touch of sweetness. Adjust the amount according to your taste preferences.​
+5. Cover the bowl and refrigerate the fruit salad for at least 30 minutes or up to a few hours. This allows the flavors to meld and creates a more refreshing salad.​
+6. Serve the fruit salad in cups or bowls, garnished with a sprinkle of fresh parsley or mint, if desired.​
+
+This fruit salad recipe is perfect for a healthy snack or side dish, and with the variety of ingredients available in your refrigerator, it should be easy to put together quickly.`]]
+      },
+      {
+        "description": "Beautiful View",
+        "turns": [
+          ["User", "", "/static/images/view.jpg"],
+          ["User", "What are the things I should be cautious about when I visit here?​​"],
+          ["LLaVA", "When visiting this peaceful location with a pier extending over a serene lake, surrounded by mountains, there are several things to be cautious about. First, pay attention to the weather conditions, as sudden changes in weather, especially strong winds or storms, can cause the water to become rough and pose risks to the stability of the pier. Second, be mindful of the structural integrity of the pier; avoid overloading it with too many people or excessive weight, as this could potentially damage the pier or cause it to collapse. Additionally, be aware of the surrounding wildlife and respect their space; do not harm or disturb them in any way. Finally, if you decide to go fishing, ensure that you adhere to any local fishing regulations and use appropriate fishing techniques to keep the lake ecosystem healthy and maintain the balance of the food chain.​​"],
+          ["User", "Compose an engaging travel blog post about my trip to this place, highlighting the beautiful sceneries, joyful experiences, and include possible anecdotes.​​"],
+          ["LLaVA",
+            `Traveling to this picturesque location with a serene lake and mountains in the background was a refreshing and rejuvenating experience. The pier extending over the calm water provided an excellent vantage point from which to appreciate the breathtaking scenery. As I stood on the pier, I couldn't help but feel a deep connection with nature, taking a moment to soak in the peaceful atmosphere.​
+
+One of the highlights of my trip was undoubtedly the fishing experience. The area is teeming with life, and I was thrilled to land a sizeable catch, despite the modest size of the lake. The joy of fishing in such a beautiful setting was truly rewarding, and it allowed me to take a break from my busy life and truly immerse myself in the tranquility of nature.​
+
+While exploring the surrounding area, I came across a family of birds that had built a nest close to the pier, adding to the charm of the location. Interacting with the wildlife and observing their behavior was an enriching experience that I'll cherish for years to come.​
+
+In conclusion, this idyllic destination provided me with an opportunity to unwind and recharge, surrounded by mesmerizing natural beauty and the gentle sounds of water and wildlife. If you're looking for a serene escape from the hustle and bustle of everyday life, this pier overlooking the lake is the perfect place to find solace and reconnect with nature.`
+          ]
+        ]
+      },
+    ];
+
+    // The current image index
+    let currentIndex = 0;
+
+    // The function to update the displayed chat history
+    function update_dialog_demo() {
+      // Clear the chat history
+      clearChatHistory();
+
+      for (let i = 0; i < conversations[currentIndex].turns.length; i++) {
+        if (conversations[currentIndex].turns[i].length == 2) {
+          addMessageToChatHistory(conversations[currentIndex].turns[i][0], conversations[currentIndex].turns[i][1]);
+        }
+        else {
+          addMessageToChatHistory(conversations[currentIndex].turns[i][0], conversations[currentIndex].turns[i][1], conversations[currentIndex].turns[i][2]);
+        }
+      }
+
+      // scroll to the top of the chat history
+      document.querySelector('.chat-history').scrollTop = 0;
+    }
+
+    // Initialize the displayed image
+    update_dialog_demo();
+
+    // Event listeners for the buttons
+    document.getElementById('prev-question').addEventListener('click', () => {
+      currentIndex = (currentIndex - 1 + conversations.length) % conversations.length;
+      update_dialog_demo();
+    });
+
+    document.getElementById('next-question').addEventListener('click', () => {
+      currentIndex = (currentIndex + 1) % conversations.length;
+      update_dialog_demo();
+    });
+
+
+  </script>
+
+</body>
+
+</html>
