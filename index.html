@@ -140,15 +140,6 @@
             <div class="column has-text-centered">
               <div class="publication-links">
                 <span class="link-block">
-                  <a href="https://arxiv.org/abs/2304.08485" target="_blank"
-                    class="external-link button is-normal is-rounded is-dark">
-                    <span class="icon">
-                      <i class="ai ai-arxiv"></i>
-                    </span>
-                    <span>arXiv</span>
-                  </a>
-                </span>
-                <span class="link-block">
                   <a href="https://github.com/haotian-liu/LLaVA" target="_blank"
                     class="external-link button is-normal is-rounded is-dark">
                     <span class="icon">
@@ -166,27 +157,6 @@
                     <span>Demo</span>
                   </a>
                 </span>
-                <span class="link-block">
-                  <a href="https://huggingface.co/datasets/liuhaotian/LLaVA-Instruct-150K" target="_blank"
-                    class="external-link button is-normal is-rounded is-dark">
-                    <span class="icon">
-                      <i class="fas fa-database"></i>
-                    </span>
-                    <span>Dataset</span>
-                  </a>
-                </span>
-                <span class="link-block">
-                  <a href="https://github.com/haotian-liu/LLaVA/blob/main/docs/MODEL_ZOO.md" target="_blank"
-                    class="external-link button is-normal is-rounded is-dark">
-                    <span class="icon">
-                      <i class="fas fa-share-square"></i>
-                    </span>
-                    <span>Model</span>
-                  </a>
-                </span>
-
-
-                
 
                 <!-- <span class="link-block">
                 <a href="#"
@@ -248,7 +218,7 @@
               To demonstrate the new application scenarios of general-purpose assistants in the multimodal space, we introduce LLaVA-Interactive, an open-source demo system, backed by three powerful LV models and an easy-to-use, extensible framework. LLaVA-Interactive is favorable:
 
               <ol type="1">
-                <li><b>Visual Interaction</b>. It supports visual prompt by allowing users to draw strokes and bouding boxes to better express human intents in visual creation process (including image segmentation and generation/editing), in addition to visual chat. Therefore, LLaVA-Interactive has demonstrated more engaged human-machine interaction experiences compared to GPT-4V/LLaVA, in terms of following human intents.
+                <li><b>Visual Interaction</b>. It supports visual prompt by allowing users to draw strokes and bounding boxes to better express human intents in visual creation process (including image segmentation and generation/editing), in addition to visual chat. Therefore, LLaVA-Interactive has demonstrated more engaged human-machine interaction experiences compared to GPT-4V/LLaVA, in terms of following human intents.
                 </li>
                 <li><b>Open-source</b>. We make our demo system and code base publicly available, to facilitate future improvement in the community</li>
               </ol>  
@@ -293,7 +263,7 @@
         <ol type="1">
             <li><b>Image Input</b>. <span style="font-size: 95%;"> To begin, an image is needed. The user can either upload an image, or generate an image by specifying its language caption and drawing bounding boxes for the intended spatial layout of the objects. Once the image is ready, one may play with image by applying one of following three steps: chat, segmentation or editing.</span></li>
             <li><b>Visual Chat</b>: <span style="font-size: 95%;"> Ask any questions about the image, eg, the suggestions on how to revise the image. Based on the editing suggestions, one may remove or add new objects using Step 3 or 4 respectively.</span></li>
-            <li><b>Interactive Segmentation</b>: <span style="font-size: 95%;"> One may segment an object mask using either stroke drawing or text prompt. To remove it, please drag the mask out of the image, and a background will be aumatically filled. To fill in a new object, please provide the text prompt for the mask</span></li>
+            <li><b>Interactive Segmentation</b>: <span style="font-size: 95%;"> One may segment an object mask using either stroke drawing or text prompt. To remove it, please drag the mask out of the image, and a background will be aumatically filled. Alternatively, the masked can be dragged to a different location. To fill in a new object, please provide the text prompt for the mask</span></li>
             <li><b>Grounded Editing</b>: <span style="font-size: 95%;"> One may put new objects directly on the image, by drawing the bounding boxes and associating the corresponding concepts for the intended objects.</span></li>  
             <li><b>Mult-turn Interaction</b>: <span style="font-size: 95%;"> Repeating Step 2, 3 or 4 to iteratively refine the visual creation.</span></li>       
         </ol>  
