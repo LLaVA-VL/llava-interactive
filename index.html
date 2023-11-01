@@ -127,6 +127,9 @@
                 <a href="https://jwyang.github.io/" style="color:#008AD7;font-weight:normal;">Jianwei Yang</a>,
               </span>
               <span class="author-block">
+                <a href="https://www.microsoft.com/en-us/research/people/jfgao/" style="color:#008AD7;font-weight:normal;">Jianfeng Gao</a>,
+              </span>              
+              <span class="author-block">
                 <a href="https://chunyuan.li/" style="color:#008AD7;font-weight:normal;">Chunyuan Li</a>
               </span>
             </div>
@@ -139,6 +142,15 @@
 
             <div class="column has-text-centered">
               <div class="publication-links">
+                <span class="link-block">
+                  <a href="https://arxiv.org/abs/2304.08485" target="_blank"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                    </span>
+                    <span>arXiv</span>
+                  </a>
+                </span>                
                 <span class="link-block">
                   <a href="https://github.com/haotian-liu/LLaVA" target="_blank"
                     class="external-link button is-normal is-rounded is-dark">
@@ -198,7 +210,7 @@
 
   <section class="section"  style="background-color:#efeff081">
     <div class="container is-max-desktop" id="gradio">
-      <gradio-app src="https://llava.hliu.cc"></gradio-app>
+      <gradio-app src="https://6dd3-20-163-117-69.ngrok-free.app"></gradio-app>
     </div>
   </section>
 
@@ -254,7 +266,7 @@
 
         <centering>
           <div style="text-align: center;">
-            <img id="teaser" width="30%" src="images/llava_interactive_workflow.png">     
+            <img id="teaser" width="40%" src="images/llava_interactive_workflow.png">     
           </div>
         </centering>  
         <p>
@@ -368,123 +380,25 @@
   <!-- Results. -->
   <div class="columns is-centered has-text-centered">
     <div class="column is-six-fifths">
-      <h2 class="title is-3"><img id="painting_icon" width="3%" src="https://cdn-icons-png.flaticon.com/512/3515/3515174.png"> Performance</h2>
+      <h2 class="title is-3"><img id="painting_icon" width="3%" src="https://cdn-icons-png.flaticon.com/512/3515/3515174.png"> Case Study: Multimodal Interactive Creation for Photographic Artists</h2>
     </div>
   </div>
-
-
-
   <!-- </div> -->
   <!--/ Results. -->    
 <div class="container is-max-desktop">
 
 
   <!-- Grounedtext2img. -->
-  <div class="columns is-centered">
-    <div class="column is-full-width">
-      <h2 class="title is-4"><img id="painting_icon" width="4%" src="https://cdn-icons-png.flaticon.com/512/1698/1698535.png"> <span style="font-size: 100%;">Visual Chat:</span> Towards building multimodal GPT-4 level chatbot  </h2>
+  <div class="columns is-centered has-text-centered">
+    <div class="column is-six-fifths">
+      <h2 class="title is-3"><img id="painting_icon" width="4%" src="https://cdn-icons-png.flaticon.com/512/1698/1698535.png"> <span style="font-size: 100%;">Preliminary Evaluation:</span> Sparks of New Application Scenarios  </h2>
       
       <div>
         <a href="https://plotly.com/~lichunyuan24/5/?share_key=d78QObaCAYCIy8PJpe3gd1" target="_blank" title="llava_gpt4_pie" style="display: block; text-align: center;">  <img id="painting_icon" width="90%" src="images/pie_llava_gpt4.png"> </a>
 
-    </div>
-
-    <p style="font-family:Times New Roman"><b>An evaluation dataset with 30 unseen images is constructed: each image is assocaited with three types of instructions: conversation, detailed description and complex reasoning. This leads to 90 new language-image instructions, on which we test LLaVA and GPT-4, and use GPT-4 to rate their responses from score 1 to 10. The summed score and relative score per type is reported. Overall, LLaVA achieves 85.1% relative score compared with GPT-4, indicating the effectinvess of the proposed self-instruct method in multimodal settings</b>               
-    </div>
-  </div>
-
-  <!-- Grounedtext2img. -->
-  <div class="columns is-centered">
-    <div class="column is-full-width">
-      <h2 class="title is-4"> <img id="painting_icon" width="3%" src="https://scienceqa.github.io/img/logo.png"><span style="font-size: 100%;"> Science QA:</span> New SoTA with the synergy of LLaVA with GPT-4</h2>
-      
-      <div>
-        <a href="https://plotly.com/~lichunyuan24/1/?share_key=v4opE3TJpxqQ08RYsDD4iv" target="_blank" title="Plot 1" style="display: block; text-align: center;"><img id="painting_icon" width="65%" src="images/bar_llava_gpt4_scienceqa.png"></a>
-        <script data-plotly="lichunyuan24:1" sharekey-plotly="v4opE3TJpxqQ08RYsDD4iv" src="https://plotly.com/embed.js" async></script>
-    </div>
-        <p style="font-family:Times New Roman"><b>LLaVA alones achieve 90.92%. We use the text-only GPT-4 as the juedge, to predict the final answer based on its own previous answers and the LLaVA answers. This ``GPT-4 as juedge'' scheme yields a new SOTA 92.53%.</b>
-              
-    </div>
-  </div>
-</section>
-
-
-
-
-<section class="section">
-
-  <div class="columns is-centered has-text-centered">
-    <div class="column is-six-fifths">
-      <h2 class="title is-3"> Examples on Visual Instruction Following</h2>
-    </div>
-  </div>
-
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-six-fifths">
-         <h2 class="title is-4">Visual Reasoning on two examples from <a href="https://arxiv.org/abs/2303.08774">OpenAI GPT-4 Technical Report</a></h2>
-      </div>
-      </div>  
-
-    <div class="columns is-centered has-text-centered">
-    <div class="column is-six-fifths">
-      <img id="teaser" width="35%" src="images/cmp_ironing.png">
-      <img id="teaser" width="38%" src="images/cmp_chicken_nugget.png">
-    </div>
-    </div>  
-
-  
-
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-six-fifths">
-         <h2 class="title is-4">Optical character recognition (OCR)</a></h2>
-      </div>
-      </div>  
-
-    <div class="columns is-centered has-text-centered">
-    <div class="column is-six-fifths" style="display: flex; align-items: flex-start; justify-content: center;">
-        <img id="teaser" width="32%" src="images/ocr/llava_example_cvpr2023.png">
-        <img id="teaser" width="32%" src="images/ocr/llava_example_cvinw_logo.png">
-        <img id="teaser" width="32%" src="images/ocr/example_llava_exmaple.png">
-    </div>
-    </div>  
-
-  
-
-  
-
-
-  <div class="container mt-5">
-    <!-- <h2 class="text-center mb-5">Who's GPT-4's favorite? Battles between State-of-the-Art Chatbots</h2> -->
-    <!-- Selection -->
-    <div class="form-row" style="justify-content: flex-end;">
-      <div class="form-group col-md-1">
-        <div class="col-md-2" style="width: 100%"><label>&nbsp;</label></div>
-        <div class="btn-group" role="group" aria-label="Left and Right Controller"
-          style="width: 100%;align-items: flex-end;justify-content: center;flex-direction: row;display: flex;">
-          <button type="button" class="form-control btn btn-primary" id="prev-question"><i
-              class="material-icons">keyboard_arrow_left</i></button>
-          <button type="button" class="form-control btn btn-primary" id="next-question"><i
-              class="material-icons">keyboard_arrow_right</i></button>
-
-        </div>
-      </div>
-    </div>
-
-    <!-- Question Card -->
-    <div style="display: flex; justify-content: center; align-items: center;">
-      <div class="card mb-4" style="width: 100%; display: flex; align-items: center;">
-        <!-- <p><b>Description:</b> Monalisa is a famous painting by Leonardo da Vinci. </p> -->
-
-        <div class="card-body" id="selected-question" style="display: flex; height: 80vh;">
-          <div class="chat-history">
-            <!-- Add your chat messages here -->
-          </div>
-
-        </div>
-      </div>
-    </div>
 
   </div>
+
 </section>
 
   <section class="section" id="BibTeX">
@@ -492,8 +406,8 @@
       <h2 class="title">BibTeX</h2>
       <pre><code>
   @article{liu2023llava,
-    author      = {Chen, Wei-Ge and Spiridonova, Irina and Yang, Jianwei and Li, Chunyuan},
-    title       = {LLaVA-Interactive: Image Chat, Segmentation and Generation/Editing -- An All-in-One Demo},
+    author      = {Chen, Wei-Ge and Spiridonova, Irina and Yang, Jianwei and Gao, Jianfeng and Li, Chunyuan},
+    title       = {LLaVA-Interactive: An All-in-One Demo for Image Chat, Segmentation, Generation and Editing},
     publisher   = {https://llava-vl.github.io/llava-interactive},
     year        = {2023}
   }
