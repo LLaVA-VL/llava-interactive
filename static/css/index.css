@@ -8,9 +8,14 @@ body {
     color: #000;
 }
 
-.link-block a {
+.link-block :is(a, button) {
     margin-top: 5px;
     margin-bottom: 5px;
+}
+
+.disabled {
+    pointer-events: none;
+    opacity: 0.5;
 }
 
 .dnerf {
