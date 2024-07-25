@@ -104,6 +104,20 @@
   #gradio pre {
     background-color: transparent;
   }
+
+  .demo-warning {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+  
+  .demo-warning-message {
+    padding: 1rem 2rem;
+    font-size: 1.25rem;
+    border-radius: 100px;
+    color: hsla(0deg 100% 100% / 100%);
+    background-color: hsla(0 100% 37% / 100%);
+  }
 </style>
 
 <body>
@@ -180,8 +194,10 @@
                     </a>
                 </span>
               </div>
-              <div class="has-text-centered">
-            The live demo or playground website has been disabled.
+              <div class="demo-warning">
+                <div class="demo-warning-message">
+                  ⚠️ As of Jun 10, 2024 the live demo or playground website is disabled. ⚠️
+                </div>
               </div>
             </div>
           </div>
@@ -205,7 +221,6 @@
 
         <h4 class="subtitle has-text-centered">
           LLaVA-Interactive is a system-level synergy of the inference stages of three models, without additional model training. It is surprisingly cheap to build. Checkout our code release on GitHub.
-
         </h4>
       </div>
     </div>
@@ -213,20 +228,17 @@
 
   <section class="section"  style="background-color:#efeff081">
 
-    <div class="container is-max-desktop" id="gradio">
+    <div class="container is-max-desktop has-text-centered" id="gradio">
                  
       <span class="link-block">
-           
-        <a href="https://llavainteractive.ngrok.app/" target="_blank"
+        <span
           class="external-link button is-normal is-rounded is-dark">
-          <span class="icon">
-            <i class="far fa-images"></i>
-          </span>
-          <span>  For better demo experience, please play LLaVA-Interactive in a seperate tab by clicking me</span>
-        </a>
+        <span class="icon">
+          <i class="far fa-images"></i>
+        </span>
+        <span class="external-link button is-normal is-rounded is-dark">The live demo was disabled on Jun 10, 2024</span>
+        </span>
       </span>
-
-      <gradio-app src="https://llavainteractive.ngrok.app/"></gradio-app>
     </div>
   </section>
 
